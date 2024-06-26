@@ -5,6 +5,10 @@ on:
   # Run workflow on fork repository will help contributors find and resolve issues before sending a PR.
   push:
   pull_request:
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.event_name }}'
+  
 jobs:
   golangci:
     name: pull-kafka-exporter-golang-ci
@@ -19,16 +23,16 @@ jobs:
       ## this will contain a matrix of all of the combinations
       ## we wish to test again:
       matrix:
-        go-version: [ 1.20.x ]
+        go-version: [ 1.22 ]
         os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
           path: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}
