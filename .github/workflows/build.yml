@@ -26,6 +26,8 @@ jobs:
     if: github.ref != 'refs/heads/master' # only run analyze on PR
     steps:
       - uses: 3lvia/core-github-actions-templates/analyze@trunk
+        with:
+          language: go
 
   build:
     name: Build and Scan
