@@ -5,6 +5,10 @@ on:
   # Run workflow on fork repository will help contributors find and resolve issues before sending a PR.
   push:
   pull_request:
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.event_name }}'
+  
 jobs:
   golangci:
     name: pull-kafka-exporter-golang-ci
