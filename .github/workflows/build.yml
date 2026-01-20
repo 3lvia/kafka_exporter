@@ -4,20 +4,27 @@ on:
   push:
     branches:
       - 'master'
+  workflow_dispatch:
+    
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  analyze:
+    name: Analyze
+    runs-on: elvia-runner
+    # if: github.ref != 'refs/heads/master' # only run analyze on PR
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - uses: 3lvia/core-github-actions-templates/analyze@trunk
         with:
-          go-version: 1.24.0
-      - name: Build Docker Image
-        run: make push
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          GIT_TAG_NAME: latest
+          language: go
+
+  build:
+    name: Build and Scan
+    runs-on: elvia-runner
+    environment: build
+    steps:
+      - uses: 3lvia/core-github-actions-templates/build@trunk
+        with:
+          name: github-metrics
+          namespace: monitoring
+          dockerfile: Dockerfile
+          registry: ghcr.io/3lvia
