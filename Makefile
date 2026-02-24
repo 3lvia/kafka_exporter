@@ -65,15 +65,15 @@ push: crossbuild
 		.
 
 ghcrpush: build
-    @echo ">> building and pushing docker image to GHCR: $(GHCR_OWNER)/$(DOCKER_IMAGE_NAME):$(GIT_TAG_NAME)"
-    @mkdir -p .build/linux-amd64
-    @cp kafka_exporter .build/linux-amd64/kafka_exporter
-    @docker buildx create --use
-    @docker buildx build \
-        -t "ghcr.io/$(GHCR_OWNER)/$(DOCKER_IMAGE_NAME):$(GIT_TAG_NAME)" \
-        --output "$(PUSHTAG)" \
-        --platform "linux/amd64" \
-        .	
+	@echo ">> building and pushing docker image to GHCR: $(GHCR_OWNER)/$(DOCKER_IMAGE_NAME):$(GIT_TAG_NAME)"
+	@mkdir -p .build/linux-amd64
+	@cp kafka_exporter .build/linux-amd64/kafka_exporter
+	@docker buildx create --use
+	@docker buildx build \
+		-t "ghcr.io/$(GHCR_OWNER)/$(DOCKER_IMAGE_NAME):$(GIT_TAG_NAME)" \
+		--output "$(PUSHTAG)" \
+		--platform "linux/amd64" \
+		.
 
 release: promu github-release
 	@echo ">> pushing binary to github with ghr"
