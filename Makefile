@@ -64,7 +64,7 @@ push: crossbuild
 		--platform "$(DOCKER_PLATFORMS)" \
 		.
 
-ghcrpush: crossbuild
+ghcrpush: build
 	@echo ">> building and pushing multi-arch docker images to GHCR: $(GHCR_OWNER)/$(DOCKER_IMAGE_NAME):$(GIT_TAG_NAME)"
 	@docker buildx create --use
 	@docker buildx build \
