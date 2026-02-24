@@ -6,6 +6,9 @@ on:
       - 'master'
   workflow_dispatch:
     
+env:
+  GIT_TAG_NAME: preview1
+  GO_VERSION: 1.26.0
 
 jobs:
   analyze:
@@ -38,24 +41,19 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.26.0
+          go-version: ${{ env.GO_VERSION }}
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: 'ghcr.io'
           username: ${{ github.actor }}
           password: ${{ github.token }}
-      - name: Build Docker Image
+      - name: Build Docker Image and Push to GHCR
         run: make ghcrpush DOCKER_PLATFORMS=linux/amd64 \
                            GHCR_OWNER=3lvia \                          
-                           GIT_TAG_NAME=preview1 \
+                           GIT_TAG_NAME=${{ env.GIT_TAG_NAME }} \
 
       - name: Install 3lv CLI
         uses: 3lvia/cli/setup@trunk
       - name: Scan with 3lv CLI
-        run: 3lv scan --severity=CRITICAL,HIGH ghcr.io/3lvia/kafka_exporter:preview1
-
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          GIT_TAG_NAME: latest
+        run: 3lv scan --severity=CRITICAL,HIGH kafka_exporter:${{ env.GIT_TAG_NAME }}
