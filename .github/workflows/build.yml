@@ -50,6 +50,10 @@ jobs:
                            GHCR_OWNER=3lvia \                          
                            GIT_TAG_NAME=preview1 \
 
+      - name: Install 3lv CLI
+        uses: 3lvia/cli/setup@trunk
+      - name: Scan with 3lv CLI
+        run: 3lv scan --type=container --image=ghcr.io/3lvia/kafka_exporter:preview1 --output=github
 
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
